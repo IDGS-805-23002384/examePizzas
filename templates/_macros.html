@@ -1,0 +1,39 @@
+{% macro campo_texto(campo) %}
+<div class="campo">
+  {{ campo.label }} {{ campo(value=campo.data or "") }} {% if campo.errors %}
+  <ul class="errores">
+    {% for error in campo.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endmacro %} {% macro campo_radio(campo) %}
+<div class="campo-radio">
+  <strong>{{ campo.label.text }}</strong>
+
+  {% for opcion in campo %}
+  <div class="radio-item">{{ opcion }} {{ opcion.label }}</div>
+  {% endfor %} {% if campo.errors %}
+  <ul class="errores">
+    {% for error in campo.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endmacro %} {% macro campo_checkbox(campo) %}
+<div class="campo-checkbox">
+  <strong>{{ campo.label.text }}</strong>
+
+  {% for opcion in campo %}
+  <div class="checkbox-item">{{ opcion }} {{ opcion.label }}</div>
+  {% endfor %} {% if campo.errors %}
+  <ul class="errores">
+    {% for error in campo.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endmacro %}

@@ -1,0 +1,68 @@
+{% extends "layout.html" %} {% block contenido %}
+<div class="ventas-container">
+  <h2>Consultar Ventas</h2>
+
+  <div class="consulta-form">
+    <form method="POST" action="{{ url_for('pizzas.ventas') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="consulta-opciones">
+        <label>
+          <input type="radio" name="tipo_consulta" value="dia" required />
+          Por día
+        </label>
+        <label>
+          <input type="radio" name="tipo_consulta" value="mes" required />
+          Por mes
+        </label>
+      </div>
+
+      <div class="consulta-input">
+        <input
+          type="text"
+          name="valor_consulta"
+          placeholder="lunes, martes... o enero, febrero..."
+          required
+        />
+        <button type="submit">Consultar</button>
+      </div>
+    </form>
+  </div>
+
+  {% if tipo_consulta %}
+  <div class="resultados-consulta">
+    <h3>Ventas de {{ valor_consulta|capitalize }}</h3>
+
+    {% if ventas %}
+    <div class="lista-ventas">
+      {% for venta in ventas %}
+      <div class="venta-item">
+        <div class="venta-info">
+          <span class="cliente">{{ venta.cliente.nombre }}</span>
+          <span class="total">${{ venta.total }}</span>
+        </div>
+        <a
+          href="{{ url_for('pizzas.detalle_pedido', pedido_id=venta.id_pedido) }}"
+          class="btn-ver-detalle"
+          >Ver detalle</a
+        >
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="total-general">
+      <strong>Ventas totales del período: ${{ total_general }}</strong>
+    </div>
+    {% else %}
+    <p class="sin-resultados">No hay ventas para este período</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="acciones">
+    <a href="{{ url_for('pizzas.registrar') }}" class="btn-regresar"
+      >Registrar nuevo pedido</a
+    >
+  </div>
+</div>
+{% endblock %}

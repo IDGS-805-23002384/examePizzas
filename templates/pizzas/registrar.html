@@ -1,0 +1,122 @@
+{% extends "layout.html" %} {% block contenido %} {% from "_macros.html" import
+campo_texto, campo_radio, campo_checkbox %}
+
+<div class="pedido-container">
+  <div class="formulario-pedido">
+    <h2>Registrar Pedido</h2>
+
+    <form method="POST" action="{{ url_for('pizzas.registrar') }}" novalidate>
+      {{ form.csrf_token }}
+
+      <fieldset>
+        <legend>Datos del Cliente</legend>
+        {{ campo_texto(form.nombre) }} {{ campo_texto(form.direccion) }} {{
+        campo_texto(form.telefono) }}
+      </fieldset>
+
+      <fieldset>
+        <legend>Agregar Pizza</legend>
+
+        {{ campo_texto(form.cantidad) }}
+
+        <div class="opciones-lado">
+          <div class="opcion-grupo">
+            <strong>{{ form.tamano.label.text }}</strong>
+            {{ form.tamano() }}
+          </div>
+
+          <div class="opcion-grupo">
+            <strong>{{ form.ingredientes.label.text }}</strong>
+            {{ form.ingredientes() }}
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="botones">
+        <button type="submit" class="btn-agregar">Agregar Pizza</button>
+      </div>
+    </form>
+
+    <div class="acciones-pedido">
+      <form
+        method="POST"
+        action="{{ url_for('pizzas.terminar') }}"
+        style="display: inline"
+      >
+        {{ form.csrf_token }}
+        <button
+          type="submit"
+          class="btn-terminar"
+          {%
+          if
+          not
+          pedido.pizzas
+          %}disabled{%
+          endif
+          %}
+        >
+          Terminar Pedido
+        </button>
+      </form>
+      <a href="{{ url_for('pizzas.ventas') }}" class="btn-ventas">Ver Ventas</a>
+    </div>
+  </div>
+
+  {% if pedido and pedido.pizzas %}
+  <div class="detalle-pedido">
+    <h3>Detalle del Pedido</h3>
+
+    {% if pedido.cliente.nombre %}
+    <div class="cliente-info">
+      <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
+      <p><strong>Dirección:</strong> {{ pedido.cliente.direccion }}</p>
+      <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+    </div>
+    {% endif %}
+
+    <table class="tabla-pizzas">
+      <thead>
+        <tr>
+          <th>Cantidad</th>
+          <th>Tamaño</th>
+          <th>Ingredientes</th>
+          <th>Subtotal</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pizza in pedido.pizzas %}
+        <tr>
+          <td>{{ pizza.cantidad }}</td>
+          <td>{{ pizza.tamaño|capitalize }}</td>
+          <td>
+            {% for ing in pizza.ingredientes %} {{ ing }}{% if not loop.last %},
+            {% endif %} {% endfor %}
+          </td>
+          <td>${{ pizza.subtotal }}</td>
+          <td>
+            <a
+              href="{{ url_for('pizzas.quitar_pizza', pizza_id=pizza.id) }}"
+              class="btn-quitar"
+              onclick="return confirm('¿Eliminar esta pizza?');"
+            >
+              Quitar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right"><strong>TOTAL:</strong></td>
+          <td>
+            <strong>${{ pedido.pizzas|sum(attribute='subtotal') }}</strong>
+          </td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

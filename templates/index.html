@@ -1,0 +1,53 @@
+{% extends "layout.html" %} {% block contenido %} {% from "_macros.html" import
+campo_texto, campo_radio, campo_checkbox %}
+
+<form method="POST" novalidate>
+  <fieldset>
+    <legend>Clientes</legend>
+
+    {{ campo_texto(cliente.nombre) }} {{ campo_texto(cliente.direccion) }} {{
+    campo_texto(cliente.telefono) }}
+  </fieldset>
+
+  <fieldset>
+    <legend>Pizza</legend>
+
+    {{ campo_texto(pizza.cantidad) }}
+
+    <div class="opciones-lado">
+      {{ campo_radio(pizza.tamaño) }} {{ campo_checkbox(pizza.ingredientes) }}
+    </div>
+  </fieldset>
+
+  <div class="botones">
+    <button type="submit">Agregar</button>
+  </div>
+</form>
+
+{% if nota %}
+<div class="notas">
+  <h3>Venta</h3>
+  <p><strong>Fecha:</strong> {{ nota.fecha }}</p>
+  <p><strong>Nombre:</strong> {{ nota.nombre }}</p>
+  <p><strong>Dirección:</strong> {{ nota.direccion }}</p>
+  <p><strong>Teléfono:</strong> {{ nota.telefono }}</p>
+
+  <table>
+    <tr>
+      <th>Cantidad</th>
+      <th>Tamaño</th>
+      <th>Ingredientes</th>
+      <th>Total</th>
+    </tr>
+    <tr>
+      <td>{{ nota.cantidad }}</td>
+      <td>{{ nota.tamaño }}</td>
+      <td>
+        {% for ing in nota.ingredientes %} {{ ing }}<br />
+        {% endfor %}
+      </td>
+      <td>$ {{ nota.total }}</td>
+    </tr>
+  </table>
+</div>
+{% endif %} {% endblock %}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block titulo %}Pizzería Exam{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="{{ url_for('pizzas.registrar') }}" class="nav-brand"
+          >Pizzería</a
+        >
+        <ul class="nav-menu">
+          <li>
+            <a href="{{ url_for('pizzas.registrar') }}">Registrar Pedido</a>
+          </li>
+          <li><a href="{{ url_for('pizzas.ventas') }}">Consultar Ventas</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <div class="layout">
+      <main class="contenido">{% block contenido %}{% endblock %}</main>
+    </div>
+
+  </body>
+</html>

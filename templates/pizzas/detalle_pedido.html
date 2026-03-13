@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block contenido %}
+<div class="detalle-venta-container">
+  <h2>Detalle del Pedido</h2>
+
+  <div class="cliente-detalle">
+    <h3>Datos del Cliente</h3>
+    <p><strong>Nombre:</strong> {{ pedido.cliente.nombre }}</p>
+    <p><strong>Dirección:</strong> {{ pedido.cliente.direccion }}</p>
+    <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha.strftime('%d/%m/%Y') }}</p>
+  </div>
+
+  <div class="pizzas-detalle">
+    <h3>Pizzas del Pedido</h3>
+    <table class="tabla-detalle">
+      <thead>
+        <tr>
+          <th>Cantidad</th>
+          <th>Tamaño</th>
+          <th>Ingredientes</th>
+          <th>Precio Unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for detalle in pedido.detalles %}
+        <tr>
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.pizza.tamano|capitalize }}</td>
+          <td>{{ detalle.pizza.ingredientes }}</td>
+          <td>${{ detalle.pizza.precio }}</td>
+          <td>${{ detalle.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" style="text-align: right"><strong>TOTAL:</strong></td>
+          <td><strong>${{ pedido.total }}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="acciones">
+    <a href="{{ url_for('pizzas.ventas') }}" class="btn-regresar"
+      >Regresar a ventas</a
+    >
+    <a href="{{ url_for('pizzas.registrar') }}" class="btn-nuevo"
+      >Nuevo pedido</a
+    >
+  </div>
+</div>
+{% endblock %}
