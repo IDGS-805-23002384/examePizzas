@@ -12,6 +12,11 @@ campo_texto, campo_radio, campo_checkbox %}
         <legend>Datos del Cliente</legend>
         {{ campo_texto(form.nombre) }} {{ campo_texto(form.direccion) }} {{
         campo_texto(form.telefono) }}
+
+        <div class="form-group">
+          <strong>{{ form.fecha.label }}</strong>
+          {{ form.fecha(class="form-control", type="date") }}
+        </div>
       </fieldset>
 
       <fieldset>

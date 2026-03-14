@@ -1,5 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, RadioField, SelectMultipleField, widgets
+from wtforms import (
+    StringField,
+    IntegerField,
+    RadioField,
+    SelectMultipleField,
+    widgets,
+    DateField,
+)
 from wtforms.validators import DataRequired
 
 
@@ -12,6 +19,11 @@ class PizzaForm(FlaskForm):
     )
     telefono = StringField(
         "Teléfono", validators=[DataRequired(message="Ingresa un número de teléfono")]
+    )
+    fecha = DateField(
+        "Fecha de Pedido",
+        validators=[DataRequired(message="Selecciona una fecha")],
+        format="%Y-%m-%d",
     )
     cantidad = IntegerField(
         "Cantidad", validators=[DataRequired(message="Ingresa la cantidad de pizzas")]

@@ -15,12 +15,21 @@ def registrar():
     if "pedido_temp" not in session:
         session["pedido_temp"] = {"cliente": {}, "pizzas": []}
 
+    if request.method == "GET" and session["pedido_temp"]["cliente"]:
+        c = session["pedido_temp"]["cliente"]
+        form.nombre.data = c.get("nombre")
+        form.direccion.data = c.get("direccion")
+        form.telefono.data = c.get("telefono")
+        if c.get("fecha"):
+            form.fecha.data = datetime.strptime(c["fecha"], "%Y-%m-%d").date()
+
     if request.method == "POST":
         if form.validate_on_submit():
             session["pedido_temp"]["cliente"] = {
                 "nombre": form.nombre.data,
                 "direccion": form.direccion.data,
                 "telefono": form.telefono.data,
+                "fecha": form.fecha.data.strftime("%Y-%m-%d"),
             }
 
             if not form.ingredientes.data:
@@ -133,7 +142,7 @@ def terminar():
 
         pedido = Pedidos(
             id_cliente=cliente.id_cliente,
-            fecha=datetime.now().date(),
+            fecha=datetime.strptime(pedido_temp["cliente"]["fecha"], "%Y-%m-%d").date(),
             total=total_pedido,
         )
         db.session.add(pedido)
